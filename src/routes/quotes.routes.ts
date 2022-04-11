@@ -1,9 +1,8 @@
-import { Request, Response, Router } from "express";
+import { Router } from "express";
+import quotesController from "../controllers/quotes.controller";
 
 const router: Router = Router();
 
-router.get("/", (req: Request, res: Response) => {
-  res.send("Conntected to quotes");
-});
+router.get("/", quotesController.quotes);
 
 export default router;

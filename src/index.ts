@@ -1,7 +1,8 @@
-import express from "express";
+import express, { Application, Request, Response } from "express";
 import cors from "cors";
+import routes from "./routes";
 
-const app = express();
+const app: Application = express();
 
 //initalization
 const port = process.env.PORT || 3001;
@@ -22,3 +23,18 @@ app.listen(app.get("port"), () => {
 });
 
 //Routes
+app.use("/", routes);
+
+// error handler middleware
+interface error {
+  status: number;
+  message: string;
+}
+app.use((err: error, req: Request, res: Response) => {
+  res.status(err.status || 500).send({
+    error: {
+      status: err.status || 500,
+      message: err.message || "Internal Server Error",
+    },
+  });
+});

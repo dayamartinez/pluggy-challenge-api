@@ -1,7 +1,18 @@
-import express, { Application, Request, Response } from "express";
+import express, {
+  Application,
+  ErrorRequestHandler,
+  NextFunction,
+  Request,
+  Response,
+} from "express";
 import cors from "cors";
-import routes from "./routes";
+import cron from "node-cron";
+import dotenv from "dotenv";
 
+import routes from "./routes";
+import collectInfoController from "./controllers/collectInfo.controller";
+
+dotenv.config();
 const app: Application = express();
 
 //initalization
@@ -9,13 +20,9 @@ const port = process.env.PORT || 3001;
 app.set("port", port);
 app.use(cors());
 
-//settings
-
 //middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-//static
 
 //starting server
 app.listen(app.get("port"), () => {
@@ -25,16 +32,24 @@ app.listen(app.get("port"), () => {
 //Routes
 app.use("/", routes);
 
-// error handler middleware
-interface error {
-  status: number;
-  message: string;
-}
-app.use((err: error, req: Request, res: Response) => {
-  res.status(err.status || 500).send({
-    error: {
-      status: err.status || 500,
-      message: err.message || "Internal Server Error",
-    },
-  });
+//cron - each 60s
+cron.schedule("* * * * *", async () => {
+  await collectInfoController.collectInformation();
 });
+
+// error handler middleware
+app.use(
+  (
+    err: ErrorRequestHandler,
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    res.status(500).send({
+      error: {
+        status: 500,
+        message: "Internal Server Error",
+      },
+    });
+  }
+);

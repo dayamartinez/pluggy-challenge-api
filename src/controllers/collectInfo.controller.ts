@@ -1,4 +1,5 @@
 import clientSanity from "../../config/dataset.config";
+import querySanity from "../../constants/querySanity";
 import getQuotes from "../../utils";
 import quotes from "../models/quotes.model";
 import slippage from "../models/slippgae.model";
@@ -8,6 +9,7 @@ class collectInfoController {
     const { getQuotesOnAmbito, getQuotesOnCronista, getQuotesOnDolarHoy } =
       getQuotes;
     try {
+      const { QUERY_AVERAGE, QUERY_SLIPPAGE, QUOTES_QUERY } = querySanity;
       const [ambitoResponse, dolarHoyResponse, cronistaResponse] =
         await Promise.all([
           getQuotesOnAmbito(),
@@ -16,8 +18,6 @@ class collectInfoController {
         ]);
 
       if (ambitoResponse && dolarHoyResponse && cronistaResponse) {
-        const queryQuotes: string = `*[_type == "quotes"] {buy_price, sell_price, source, _id}`;
-
         const quotesType: string = "quotes";
         const averageType: string = "average";
         const slippageType: string = "slippage";
@@ -33,7 +33,7 @@ class collectInfoController {
             cronistaResponse.sell_price) /
           3;
 
-        const responseQuotesDB = await clientSanity.fetch(queryQuotes);
+        const responseQuotesDB = await clientSanity.fetch(QUOTES_QUERY);
 
         if (!responseQuotesDB?.length) {
           //FIRSTIME
@@ -68,11 +68,8 @@ class collectInfoController {
           return "Created successfy";
         }
         //FINDED
-        const queryAverage: string = `*[_type == "average"] {average_sell_price, average_buy_price, _id}`;
-        const querySlippage: string = `*[_type == "slippage"] {buy_price_slippage, sell_price_slippage, source, _id}`;
-
-        const responseAverageDB = await clientSanity.fetch(queryAverage);
-        const responseSlippageDB = await clientSanity.fetch(querySlippage);
+        const responseAverageDB = await clientSanity.fetch(QUERY_AVERAGE);
+        const responseSlippageDB = await clientSanity.fetch(QUERY_SLIPPAGE);
 
         const findSlippage = async (
           source: string,

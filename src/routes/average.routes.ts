@@ -1,9 +1,8 @@
-import { Request, Response, Router } from "express";
+import { Router } from "express";
+import averageController from "../controllers/average.controller";
 
 const router: Router = Router();
 
-router.get("/", (req: Request, res: Response) => {
-  res.send("Conntected to average");
-});
+router.get("/", averageController.average);
 
 export default router;

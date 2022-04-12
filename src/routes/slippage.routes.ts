@@ -1,9 +1,8 @@
-import { Request, Response, Router } from "express";
+import { Router } from "express";
+import slippageController from "../controllers/slippage.controller";
 
 const router: Router = Router();
 
-router.get("/", (req: Request, res: Response) => {
-  res.send("Conntected to slippage");
-});
+router.get("/", slippageController.slippage);
 
 export default router;

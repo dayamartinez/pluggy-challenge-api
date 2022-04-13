@@ -62,7 +62,7 @@ const getQuotesOnDolarHoy = async () => {
 const getQuotesOnCronista = async () => {
   const source: string = process.env.SOURCE_CRONISTA;
   const browser = await chromium.launch({
-    headless: false,
+    chromiumSandbox: false,
   });
   const page = await browser.newPage({
     bypassCSP: true, // This is needed to enable JavaScript execution on GitHub.

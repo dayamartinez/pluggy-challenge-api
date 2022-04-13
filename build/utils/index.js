@@ -29,9 +29,7 @@ const getQuotesOnAmbito = () => __awaiter(void 0, void 0, void 0, function* () {
 const getQuotesOnDolarHoy = () => __awaiter(void 0, void 0, void 0, function* () {
     const source = process.env.SOURCE_DOLAR_HOY;
     const browser = yield playwright_chromium_1.chromium.launch({
-        headless: false,
         chromiumSandbox: false,
-        channel: "chrome",
     });
     const page = yield browser.newPage({
         bypassCSP: true, // This is needed to enable JavaScript execution on GitHub.

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { chromium } from "playwright-chromium";
+import { chromium } from "playwright";
 
 declare const process: {
   env: {
@@ -35,7 +35,6 @@ const getQuotesOnDolarHoy = async () => {
   const browser = await chromium.launch({
     headless: false,
     chromiumSandbox: false,
-    channel: "chrome",
   });
   const page = await browser.newPage({
     bypassCSP: true, // This is needed to enable JavaScript execution on GitHub.

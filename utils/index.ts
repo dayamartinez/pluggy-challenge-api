@@ -35,6 +35,7 @@ const getQuotesOnDolarHoy = async () => {
   const browser = await chromium.launch({
     headless: false,
     chromiumSandbox: false,
+    channel: "chrome",
   });
   const page = await browser.newPage({
     bypassCSP: true, // This is needed to enable JavaScript execution on GitHub.

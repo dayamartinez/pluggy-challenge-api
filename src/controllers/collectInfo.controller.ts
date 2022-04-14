@@ -43,34 +43,38 @@ class collectInfoController {
             sell_price_slippage: 0,
           };
 
-          await clientSanity.create({ _type: quotesType, ...ambitoResponse });
-          await clientSanity.create({ _type: quotesType, ...dolarHoyResponse });
-          await clientSanity.create({ _type: quotesType, ...cronistaResponse });
-
-          await clientSanity.create({
-            _type: averageType,
-            average_buy_price,
-            average_sell_price,
-          });
-
-          await clientSanity.create({
-            ...initialSlippage,
-            source: ambitoResponse.source,
-          });
-          await clientSanity.create({
-            ...initialSlippage,
-            source: ambitoResponse.source,
-          });
-          await clientSanity.create({
-            ...initialSlippage,
-            source: ambitoResponse.source,
-          });
+          await Promise.all([
+            clientSanity.create({ _type: quotesType, ...ambitoResponse }),
+            clientSanity.create({ _type: quotesType, ...dolarHoyResponse }),
+            clientSanity.create({ _type: quotesType, ...cronistaResponse }),
+            clientSanity.create({
+              _type: averageType,
+              average_buy_price,
+              average_sell_price,
+            }),
+            clientSanity.create({
+              ...initialSlippage,
+              source: ambitoResponse.source,
+            }),
+            clientSanity.create({
+              ...initialSlippage,
+              source: ambitoResponse.source,
+            }),
+            clientSanity.create({
+              ...initialSlippage,
+              source: ambitoResponse.source,
+            }),
+          ]);
           return "Created successfy";
         }
-        //FINDED
-        const responseAverageDB = await clientSanity.fetch(QUERY_AVERAGE);
-        const responseSlippageDB = await clientSanity.fetch(QUERY_SLIPPAGE);
+        //FIND AND UPDATE
+        //gets list of average and slippage
+        const [responseAverageDB, responseSlippageDB] = await Promise.all([
+          clientSanity.fetch(QUERY_AVERAGE),
+          clientSanity.fetch(QUERY_SLIPPAGE),
+        ]);
 
+        //This function update slippage
         const findSlippage = async (
           source: string,
           buyPricePreview: number,
@@ -94,6 +98,7 @@ class collectInfoController {
           }
         };
 
+        //watch quotes - buy price and sell price if any change it update the quotes and slippage
         await responseQuotesDB.forEach(async (element: quotes) => {
           const { source, buy_price, sell_price, _id } = element;
           if (source === ambitoResponse.source) {
@@ -158,6 +163,8 @@ class collectInfoController {
               .commit();
           }
         });
+
+        //updating average
         if (responseAverageDB.length) {
           const id = responseAverageDB[0]?._id;
           const updatedAverage = await clientSanity

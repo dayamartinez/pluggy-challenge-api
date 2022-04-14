@@ -36,8 +36,7 @@ app.use("/", routes);
 cron.schedule("* * * * *", async () => {
   const cronCall: string | undefined =
     await collectInfoController.collectInformation();
-  if (cronCall?.includes("error")) console.log(cronCall);
-  else console.log("created or updated successfy");
+  console.log(cronCall || "error");
 });
 
 // error handler middleware

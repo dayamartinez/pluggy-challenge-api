@@ -25,8 +25,8 @@ const getQuotesOnAmbito = async () => {
       data: { compra, venta },
     } = await axios.get(apiExt);
     return {
-      sell_price: parseFloat(compra),
-      buy_price: parseFloat(venta),
+      sell_price: parseFloat(venta),
+      buy_price: parseFloat(compra),
       source,
     };
   } catch (err) {

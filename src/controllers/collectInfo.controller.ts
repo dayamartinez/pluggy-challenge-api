@@ -67,11 +67,14 @@ class collectInfoController {
           ]);
           return "Created successfy";
         }
-        //FINDED
+        //FIND AND UPDATE
+        //gets list of average and slippage
         const [responseAverageDB, responseSlippageDB] = await Promise.all([
           clientSanity.fetch(QUERY_AVERAGE),
           clientSanity.fetch(QUERY_SLIPPAGE),
         ]);
+
+        //This function update slippage
         const findSlippage = async (
           source: string,
           buyPricePreview: number,
@@ -95,6 +98,7 @@ class collectInfoController {
           }
         };
 
+        //watch quotes - buy price and sell price if any change it update the quotes and slippage
         await responseQuotesDB.forEach(async (element: quotes) => {
           const { source, buy_price, sell_price, _id } = element;
           if (source === ambitoResponse.source) {
@@ -159,6 +163,8 @@ class collectInfoController {
               .commit();
           }
         });
+
+        //updating average
         if (responseAverageDB.length) {
           const id = responseAverageDB[0]?._id;
           const updatedAverage = await clientSanity

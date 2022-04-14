@@ -58,11 +58,11 @@ class collectInfoController {
             }),
             clientSanity.create({
               ...initialSlippage,
-              source: ambitoResponse.source,
+              source: dolarHoyResponse.source,
             }),
             clientSanity.create({
               ...initialSlippage,
-              source: ambitoResponse.source,
+              source: cronistaResponse.source,
             }),
           ]);
           return "Created successfy";
@@ -91,8 +91,8 @@ class collectInfoController {
             await clientSanity
               .patch(findedSlippage._id)
               .set({
-                buy_price: diffBuyPrice,
-                sell_price: diffSellPrice,
+                buy_price_slippage: diffBuyPrice,
+                sell_price_slippage: diffSellPrice,
               })
               .commit();
           }

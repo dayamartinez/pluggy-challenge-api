@@ -91,8 +91,8 @@ class collectInfoController {
             await clientSanity
               .patch(findedSlippage._id)
               .set({
-                buy_price_slippage: diffBuyPrice,
-                sell_price_slippage: diffSellPrice,
+                buy_price_slippage: (diffBuyPrice * 100) / buyPricePreview,
+                sell_price_slippage: (diffSellPrice * 100) / sellPricePreview,
               })
               .commit();
           }

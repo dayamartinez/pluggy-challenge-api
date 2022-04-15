@@ -1,8 +1,8 @@
 import clientSanity from "../../config/dataset.config";
 import querySanity from "../../constants/querySanity";
 import getQuotes from "../../utils";
-import quotes from "../models/quotes.model";
-import slippage from "../models/slippgae.model";
+import Quotes from "../models/quotes";
+import Slippage from "../models/slippgae";
 
 class collectInfoController {
   static async collectInformation() {
@@ -85,7 +85,7 @@ class collectInfoController {
           const diffBuyPrice = buyPriceCurrent - buyPricePreview;
           const diffSellPrice = sellPriceCurrent - sellPricePreview;
           let findedSlippage = responseSlippageDB?.find(
-            (element: slippage) => element.source === source
+            (element: Slippage) => element.source === source
           );
           if (findedSlippage) {
             await clientSanity
@@ -99,7 +99,7 @@ class collectInfoController {
         };
 
         //watch quotes - buy price and sell price if any change it update the quotes and slippage
-        await responseQuotesDB.forEach(async (element: quotes) => {
+        await responseQuotesDB.forEach(async (element: Quotes) => {
           const { source, buy_price, sell_price, _id } = element;
           if (source === ambitoResponse.source) {
             if (
